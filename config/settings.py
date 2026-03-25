@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tracker',
 ]
 
 MIDDLEWARE = [
@@ -116,9 +117,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CELERY_BEAT_SCHEDULE = {
-    'check-prices-every-30-minutes': {
-        'task': 'tracker.tasks.check_prices_task',
-        'schedule': 1800.0, # Проверка каждые 30 минут
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#     'check-prices-every-30-minutes': {
+#         'task': 'tracker.tasks.check_prices_task',
+#         'schedule': 1800.0, # Проверка каждые 30 минут
+#     },
+# }
+
+# --- Настройки для Celery (будем использовать позже) ---
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+# --- Токен Telegram бота ---
+TELEGRAM_BOT_TOKEN = ''  # Пока оставь пустым, добавим позже
+
