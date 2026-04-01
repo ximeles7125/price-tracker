@@ -165,43 +165,77 @@ def _parse_from_html_classes(soup):
 
 # === ЗАГЛУШКА ДЛЯ РАЗРАБОТКИ (раскомментируй, если реальный парсинг не работает) ===
 
+# def parse_wildberries_mock(url):
+#     """
+#     Возвращает тестовые данные вместо реального парсинга.
+#     Используется для разработки, когда сайт блокирует запросы.
+#     """
+#     import random
+#
+#     # Имитируем "задержку сети"
+#     time.sleep(0.5)
+#
+#     # Генерируем случайную цену рядом с целевой
+#     # В реальном проекте здесь будет логика получения актуальной цены
+#     mock_prices = {
+#         '757984979': (4990.00, 'Кроссовки мужские спортивные'),
+#         '12345678': (1299.00, 'Футболка хлопковая'),
+#     }
+#
+#     # Извлекаем ID товара из ссылки
+#     import re
+#     match = re.search(r'/catalog/(\d+)/', url)
+#     if match:
+#         product_id = match.group(1)
+#         if product_id in mock_prices:
+#             price, name = mock_prices[product_id]
+#             # Добавляем немного случайности к цене
+#             price = price + random.uniform(-100, 100)
+#             print(f"🎭 [MOCK] {name} - {price:.2f} ₽")
+#             return round(price, 2), name
+#
+#     # Дефолтные тестовые данные
+#     print("🎭 [MOCK] Возвращаем тестовые данные")
+#     return 2999.00, 'Тестовый товар'
+#
+# # === Переключаем функцию для тестов ===
+# # Раскомментируй строку ниже, если реальный парсинг не работает:
+# parse_wildberries = parse_wildberries_mock
+
+
 def parse_wildberries_mock(url):
     """
     Возвращает тестовые данные вместо реального парсинга.
-    Используется для разработки, когда сайт блокирует запросы.
+    Генерирует случайную цену, чтобы видеть изменения в админке.
     """
     import random
+    import re
+    import time
 
-    # Имитируем "задержку сети"
+    # Имитируем задержку сети
     time.sleep(0.5)
 
-    # Генерируем случайную цену рядом с целевой
-    # В реальном проекте здесь будет логика получения актуальной цены
-    mock_prices = {
-        '757984979': (4990.00, 'Кроссовки мужские спортивные'),
-        '12345678': (1299.00, 'Футболка хлопковая'),
-    }
-
-    # Извлекаем ID товара из ссылки
-    import re
+    # Извлекаем ID товара из ссылки (для разнообразия)
     match = re.search(r'/catalog/(\d+)/', url)
+    base_price = 3000
     if match:
-        product_id = match.group(1)
-        if product_id in mock_prices:
-            price, name = mock_prices[product_id]
-            # Добавляем немного случайности к цене
-            price = price + random.uniform(-100, 100)
-            print(f"🎭 [MOCK] {name} - {price:.2f} ₽")
-            return round(price, 2), name
+        # Используем ID товара как "зерно" для случайности
+        product_id = int(match.group(1))
+        base_price = (product_id % 5000) + 1000
 
-    # Дефолтные тестовые данные
-    print("🎭 [MOCK] Возвращаем тестовые данные")
-    return 2999.00, 'Тестовый товар'
+    # Добавляем случайное отклонение от -500 до +500 рублей
+    random_offset = random.uniform(-500, 500)
+    price = round(base_price + random_offset, 2)
 
-# === Переключаем функцию для тестов ===
-# Раскомментируй строку ниже, если реальный парсинг не работает:
+    # Генерируем название
+    name = 'Тестовый товар WB'
+    if match:
+        name = f'Товар #{match.group(1)}'
+
+    print(f"🎭 [MOCK] {name} - {price} ₽ (база: {base_price}, отклонение: {random_offset:.2f})")
+    return price, name
+
 parse_wildberries = parse_wildberries_mock
-
 
 
 
