@@ -2,7 +2,7 @@ from celery import shared_task
 from django.utils import timezone
 from .models import Product
 from .services import update_product_price
-from .telegram_bot import send_price_alert
+# from .telegram_bot import send_price_alert
 
 
 @shared_task
@@ -103,3 +103,50 @@ def send_price_alert_sync(product):
     except Exception as e:
         print(f"❌ Ошибка отправки уведомления: {e}")
         return False
+
+async def send_price_alert(telegram_id, product_name, old_price, new_price, url, product_id=None):
+    """
+    Отправляет уведомление о снижении цены через aiogram.
+    Вызывается из send_price_alert_sync() через asyncio.run()
+    """
+    from aiogram import Bot
+    from django.conf import settings
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
+    if not token or not telegram_id:
+        logger.error("❌ Bot token or telegram_id not found")
+        return False
+    
+    bot = Bot(token=token)
+    
+    try:
+        discount = old_price - new_price if old_price else 0
+        discount_percent = (discount / old_price * 100) if old_price else 0
+        
+        emoji = "🔥" if product_id else "💸"
+        id_marker = f" [ID:{product_id}]" if product_id else ""
+        
+        message = (
+            f"{emoji} <b>Цена снизилась{id_marker}!</b>\n\n"
+            f"🛍️ <b>{product_name}</b>\n"
+            f"💰 Было: <s>{old_price} ₽</s>\n"
+            f"💸 Стало: <b>{new_price} ₽</b>\n"
+        )
+        
+        if discount > 0:
+            message += f"📉 Экономия: {discount:.0f} ₽ ({discount_percent:.0f}%)\n"
+        
+        message += f"\n🛒 <a href='{url}'>Перейти к покупке</a>"
+        
+        await bot.send_message(chat_id=telegram_id, text=message, parse_mode='HTML')
+        logger.info(f"✅ Alert sent to user {telegram_id}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Error sending alert: {type(e).__name__}: {e}")
+        return False
+    finally:
+        await bot.session.close()  # Важно: закрываем сессию!
