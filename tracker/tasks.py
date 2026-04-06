@@ -1,8 +1,8 @@
 from celery import shared_task
 from django.utils import timezone
+from django.conf import settings  # ← ← ← ДОБАВИТЬ ЭТУ СТРОКУ!
 from .models import Product
 from .services import update_product_price
-# from .telegram_bot import send_price_alert
 
 
 @shared_task
@@ -57,15 +57,23 @@ def check_all_prices():
     return {'updated': success, 'alerted': alerted}
 
 
+
+
 def update_product_price_local(product):
     """
-    Локальная версия обновления (чтобы не импортировать services в task).
+    Локальная версия обновления цены через Selenium-парсер.
     """
-    from .parsers.wb import parse_wildberries
+    from .parsers.wb import parse_wildberries_sync
 
     try:
         if 'wildberries' in product.url.lower():
-            new_price, new_name = parse_wildberries(product.url)
+            # Вызываем синхронную версию (для Celery)
+            new_price, new_name = parse_wildberries_sync(
+                product.url,
+                timeout=getattr(settings, 'SELENIUM_TIMEOUT', 15),
+                headless=getattr(settings, 'SELENIUM_HEADLESS', True),
+                delay_range=getattr(settings, 'SELENIUM_DELAY_RANGE', (1.0, 3.0))
+            )
         else:
             print(f"❌ Неизвестный маркетплейс: {product.url}")
             return False
