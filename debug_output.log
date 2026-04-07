@@ -1,0 +1,7 @@
+INFO - tracker.parsers.wb - 🕷️ Selenium: парсинг https://www.wildberries.ru/catalog/445140229/detail.aspx?targetUrl=MI
+INFO - WDM - ====== WebDriver manager ======
+INFO - WDM - Get LATEST chromedriver version for google-chrome
+DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): googlechromelabs.github.io:443
+DEBUG - urllib3.connectionpool - https://googlechromelabs.github.io:443 "GET /chrome-for-testing/latest-patch-versions-per-build.json HTTP/1.1" 200 16050
+INFO - WDM - Get LATEST chromedriver version for google-chrome
+DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): googlechromelabs.github.io:443

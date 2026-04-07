@@ -1,5 +1,5 @@
 from .models import Product
-from .parsers.wb import parse_wildberries
+from .parsers.wb import parse_wildberries_sync
 
 
 def update_product_price(product_id):
@@ -18,7 +18,7 @@ def update_product_price(product_id):
 
         # Определяем, какой парсер использовать
         if 'wildberries' in product.url.lower():
-            new_price, new_name = parse_wildberries(product.url)
+            new_price, new_name = parse_wildberries_sync(product.url)
         else:
             print(f"❌ Неизвестный маркетплейс: {product.url}")
             return False

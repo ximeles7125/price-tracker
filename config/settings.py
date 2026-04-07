@@ -181,3 +181,25 @@ if (BASE_DIR / '.env').exists():
             print("✅ TELEGRAM_BOT_TOKEN найден в файле")
         else:
             print("❌ TELEGRAM_BOT_TOKEN НЕ найден в файле")
+#
+# # === Настройки WebBee AI ===
+# WEBBEE_API_KEY = ''  # ← Вставь свой ключ из личного кабинета
+# WEBBEE_BASE_URL = 'https://app.webbee-ai.ru/api/v1'  # Проверь в документации
+# WEBBEE_TIMEOUT = 30  # Таймаут запроса в секундах
+# WEBBEE_POLL_INTERVAL = 2  # Интервал опроса результата в секундах
+
+
+# === Настройки Selenium-парсера для Wildberries ===
+
+# Таймаут ожидания элементов на странице (секунды)
+SELENIUM_TIMEOUT = 30
+
+# Запуск Chrome в headless-режиме (без графического интерфейса)
+SELENIUM_HEADLESS = True
+
+# Диапазон случайной задержки перед запросом (мин, макс) — имитация человека
+SELENIUM_DELAY_RANGE = (2.0, 5.0)
+
+# Максимальное количество параллельных Selenium-задач (важно для памяти!)
+# Устанавливай 1-2 на слабом сервере, 4-8 на мощном
+SELENIUM_MAX_CONCURRENCY = 1

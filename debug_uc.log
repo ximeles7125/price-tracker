@@ -1,0 +1,17 @@
+🔍 BASE_DIR: /home/alex/Documents/price_tracker
+🔍 .env существует: True
+🔍 Содержимое .env:
+SECRET_KEY=django-insecure-xmkz7_8cod4rrkz#70&gfowte%3ut!uqd-9nly2teozfd%8aws
+TELEGRAM_BOT_TOKEN=7404890464:AAGDQlbKU3onhe9nWL4GX5UwRvF5nrrHF_U
+DEBUG=True
+✅ TELEGRAM_BOT_TOKEN найден в файле
+Traceback (most recent call last):
+  File "/home/alex/Documents/price_tracker/debug_parser.py", line 22, in <module>
+    from tracker.parsers.wb import _get_chrome_options, _extract_price
+  File "/home/alex/Documents/price_tracker/tracker/parsers/wb.py", line 11, in <module>
+    import undetected_chromedriver as uc
+  File "/home/alex/Documents/price_tracker/.venv/lib/python3.13/site-packages/undetected_chromedriver/__init__.py", line 44, in <module>
+    from .patcher import IS_POSIX
+  File "/home/alex/Documents/price_tracker/.venv/lib/python3.13/site-packages/undetected_chromedriver/patcher.py", line 4, in <module>
+    from distutils.version import LooseVersion
+ModuleNotFoundError: No module named 'distutils'
