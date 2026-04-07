@@ -57,22 +57,19 @@ def check_all_prices():
     return {'updated': success, 'alerted': alerted}
 
 
-
-
 def update_product_price_local(product):
     """
-    Локальная версия обновления цены через Selenium-парсер.
+    Локальная версия обновления цены.
     """
     from .parsers.wb import parse_wildberries_sync
 
     try:
         if 'wildberries' in product.url.lower():
-            # Вызываем синхронную версию (для Celery)
+            # API-парсер будет использован автоматически (use_api_first=True по умолчанию)
+            # ✅ СТАЛО (правильно):
             new_price, new_name = parse_wildberries_sync(
                 product.url,
-                timeout=getattr(settings, 'SELENIUM_TIMEOUT', 15),
-                headless=getattr(settings, 'SELENIUM_HEADLESS', True),
-                delay_range=getattr(settings, 'SELENIUM_DELAY_RANGE', (1.0, 3.0))
+                timeout=40  # ← Только timeout, без delay_range
             )
         else:
             print(f"❌ Неизвестный маркетплейс: {product.url}")
@@ -84,7 +81,6 @@ def update_product_price_local(product):
             if new_name and not product.name:
                 product.name = new_name
             product.save()
-
             print(f"✅ {product.name}: {old_price} → {new_price} ₽")
             return True
         return False
