@@ -192,7 +192,7 @@ if (BASE_DIR / '.env').exists():
 # === Настройки Selenium-парсера для Wildberries ===
 
 # Таймаут ожидания элементов на странице (секунды)
-SELENIUM_TIMEOUT = 30
+SELENIUM_TIMEOUT = 40
 
 # Запуск Chrome в headless-режиме (без графического интерфейса)
 SELENIUM_HEADLESS = True
@@ -203,3 +203,9 @@ SELENIUM_DELAY_RANGE = (2.0, 5.0)
 # Максимальное количество параллельных Selenium-задач (важно для памяти!)
 # Устанавливай 1-2 на слабом сервере, 4-8 на мощном
 SELENIUM_MAX_CONCURRENCY = 1
+
+
+# === Настройки парсера ===
+
+SELENIUM_MIN_DELAY = 2.0  # Мин. задержка между действиями
+SELENIUM_MAX_DELAY = 7.0  # Макс. задержка
